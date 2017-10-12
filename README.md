@@ -8,8 +8,8 @@ A simple node.js library for listing installed programs. Developed for [StatusPi
 One simple solution for listing all your installed programs. No npm dependencies. Currently functioning with Windows (Linux and Mac support is planned).
 
 ### Installation
-I'm currently working on getting this on npm, it is not available yet, but once it is, simply run
-`npm install proglistr`. A workaround you can use is cloning this repository and putting it in the node_modules folder for your project.
+To install this library, simply run
+`npm install proglistr`.
 
 ### Usage
 There is only one function, called `getProgs()`.
