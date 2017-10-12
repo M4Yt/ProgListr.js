@@ -1,0 +1,19 @@
+{
+  "name": "proglistr",
+  "version": "1.0.0",
+  "description": "List all currently installed programs",
+  "main": "ProgListr.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "program",
+    "programs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fabiaant/ProgListr.js.git"
+  },
+  "author": "Fabian Thiellier",
+  "license": "MIT"
+}
