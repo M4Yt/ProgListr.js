@@ -5,7 +5,7 @@ A simple node.js library for listing installed programs. Developed for [StatusPi
 ----
 ## Getting started
 
-One simple solution for listing all your installed programs. No npm dependencies. Currently functioning with Windows (Linux and Mac support is planned).
+One simple solution for listing all your installed programs. No npm dependencies. Currently functioning with Windows and Linux (if apt is installed), Mac might be added, but no guarantees.
 
 ### Installation
 To install this library, simply run
@@ -13,7 +13,7 @@ To install this library, simply run
 
 ### Usage
 There is only one function, called `getProgs()`.
-This function is asynchronous and returns a promise with an array of objects. Every object represents a program, with a name and a version. Add the library to your program by putting
+This function is asynchronous and returns a promise with an array of objects. Every object represents a program, with a name and a version (and architecture if ran on linux). Add the library to your program by putting
 `const plistr = require('proglistr');`.
 From there you can call the function as `plistr.getProgs()` and then do with the data as you please.
 
