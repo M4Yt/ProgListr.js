@@ -31,8 +31,8 @@ function getWinProgs() {
                     let pVersion = parts.pop();
                     let pName = parts.join(" ");
                     let program = {
-                        name : pName,
-                        version : pVersion
+                        name: pName,
+                        version: pVersion
                     }
                     if (program.name !== null && program.name !== "") {
                         allPrograms.push(program);
@@ -47,28 +47,28 @@ function getWinProgs() {
 function getLnxProgs() {
     return new Promise((resolve, reject) => {
         exec("apt list --installed", (error, stdout, stderr) => {
-			if (error !== null) {
-				reject(error);
-			} else {
-				let allPrograms = [];
-				stdout.split("\n").forEach((line) => {
-					let regex = /(\S*)\/\S*,\S*\s(\S*)\s(\S*).*/;
-					let groups = regex.exec(line);
-					if (groups) {
-						let pName = groups[1];
-						let pVersion = groups[2];
-						let pArch = groups[3];
-						let program = {
-							name : pName,
-							version : pVersion,
-							arch : pArch
-						}
-						allPrograms.push(program);
-					}
-				});
-				resolve(allPrograms);
-			}
-		});
+            if (error !== null) {
+                reject(error);
+            } else {
+                let allPrograms = [];
+                stdout.split("\n").forEach((line) => {
+                    let regex = /(\S*)\/\S*,\S*\s(\S*)\s(\S*).*/;
+                    let groups = regex.exec(line);
+                    if (groups) {
+                        let pName = groups[1];
+                        let pVersion = groups[2];
+                        let pArch = groups[3];
+                        let program = {
+                            name: pName,
+                            version: pVersion,
+                            arch: pArch
+                        }
+                        allPrograms.push(program);
+                    }
+                });
+                resolve(allPrograms);
+            }
+        });
     });
 }
 
