@@ -1,6 +1,6 @@
 "use strict";
 
-const exec = require('child_process').exec;
+const exec = require("child_process").exec;
 
 exports.getProgs = getProgs;
 
@@ -16,57 +16,115 @@ function getProgs() {
 
 function getWinProgs() {
     return new Promise((resolve, reject) => {
-        exec("wmic product get name,version", (error, stdout, stderr) => {
+        exec("wmic product get name,version", (error, stdout) => {
             if (error !== null) {
                 reject(error);
             } else {
-                let allPrograms = [];
-                let splitter = stdout.split("Version");
+                const allPrograms = [];
+                const splitter = stdout.split("Version");
                 splitter.shift();
-                let allProgramlines = splitter.join("Version").split("\n");
+                const allProgramlines = splitter.join("Version").split("\n");
                 allProgramlines.shift();
-                allProgramlines.forEach((line) => {
-                    let parts = line.split(/\s{2,}/);
+                allProgramlines.forEach(line => {
+                    const parts = line.split(/\s{2,}/);
                     parts.pop();
-                    let pVersion = parts.pop();
-                    let pName = parts.join(" ");
-                    let program = {
+                    const pVersion = parts.pop();
+                    const pName = parts.join(" ");
+                    const program = {
                         name: pName,
                         version: pVersion
-                    }
+                    };
                     if (program.name !== null && program.name !== "") {
                         allPrograms.push(program);
                     }
                 });
-                resolve(allPrograms);
+                if (allPrograms.length) {
+                    resolve(allPrograms);
+                } else {
+                    reject("No programs found");
+                }
             }
         });
     });
 }
 
 function getLnxProgs() {
+    const detectPackageManagerCommand = `
+        apt --version &>/dev/null
+        if [ $? -eq 0 ]
+        then
+            echo "apt"
+            exit
+        fi
+        dnf --version &>/dev/null
+        if [ $? -eq 0 ]
+        then
+            echo "dnf"
+            exit
+        fi
+        yum --version &>/dev/null
+        if [ $? -eq 0 ]
+        then
+            echo "yum"
+            exit
+        fi
+    `;
+    const pkgManagers = {
+        "apt": {
+            "command": "apt list --installed",
+            "regex": "/(\\S*)\\/\\S*,\\S*\\s(\\S*)\\s(\\S*).*/",
+            "nameGroup": 1,
+            "versionGroup": 2,
+            "archGroup": 3
+        },
+        "dnf": {
+            "command": "dnf list installed",
+            "regex": "(\\S*)\\.(\\S*)\\s*(\\S*)\\.\\S*\\s*\\S*",
+            "nameGroup": 1,
+            "versionGroup": 3,
+            "archGroup": 2
+        },
+        "yum": {
+            "command": "yum list installed",
+            "regex": "(\\S*)\\.(\\S*)\\s*(\\S*)\\.\\S*\\s*\\S*",
+            "nameGroup": 1,
+            "versionGroup": 3,
+            "archGroup": 2
+        }
+    };
     return new Promise((resolve, reject) => {
-        exec("apt list --installed", (error, stdout, stderr) => {
+        exec(detectPackageManagerCommand, (error, pkgManager) => {
             if (error !== null) {
                 reject(error);
             } else {
-                let allPrograms = [];
-                stdout.split("\n").forEach((line) => {
-                    let regex = /(\S*)\/\S*,\S*\s(\S*)\s(\S*).*/;
-                    let groups = regex.exec(line);
-                    if (groups) {
-                        let pName = groups[1];
-                        let pVersion = groups[2];
-                        let pArch = groups[3];
-                        let program = {
-                            name: pName,
-                            version: pVersion,
-                            arch: pArch
+                pkgManager = pkgManager.trim();
+                if (!(pkgManager in pkgManagers)) {
+                    reject("This package manager is not yet supported");
+                }
+                const managerInfo = pkgManagers[pkgManager];
+                exec(managerInfo.command, (error, stdout) => {
+                    const allPrograms = [];
+                    stdout.split("\n").forEach(line => {
+                        const regex = RegExp(managerInfo.regex);
+                        const groups = regex.exec(line);
+                        if (groups) {
+                            const pName = groups[managerInfo.nameGroup];
+                            const pVersion = groups[managerInfo.versionGroup];
+                            const pArch = groups[managerInfo.archGroup];
+                            const program = {
+                                name: pName,
+                                version: pVersion,
+                                arch: pArch
+                            };
+                            allPrograms.push(program);
                         }
-                        allPrograms.push(program);
+                    });
+                    if (allPrograms.length) {
+                        resolve(allPrograms);
+                    } else {
+                        reject("No programs found");
                     }
                 });
-                resolve(allPrograms);
             }
         });
     });

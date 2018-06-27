@@ -5,7 +5,7 @@ A simple node.js library for listing installed programs. Developed for [StatusPi
 ----
 ## Getting started
 
-One simple solution for listing all your installed programs. No npm dependencies. Currently functioning with Windows and Linux (if apt is installed), Mac might be added, but no guarantees.
+One simple solution for listing all your installed programs. No npm dependencies. Currently functioning with Windows and Linux. In the future Mac might be added, but no guarantees.
 
 ### Installation
 To install this library, simply run
