@@ -95,7 +95,7 @@ function getMacProgs() {
 
 // Constants used by getLnxProgs
 const detectPackageManagerCommand = `
-    apt --version &>/dev/null
+    apt --version >/dev/null 2>&1
     if [ $? -eq 0 ]
     then
         echo "apt"
@@ -118,7 +118,7 @@ const detectPackageManagerCommand = `
 const pkgManagers = {
     "apt": {
         "command": "apt list --installed",
-        "regex": "/(\\S*)\\/\\S*,\\S*\\s(\\S*)\\s(\\S*).*/",
+        "regex": "(\\S*)\\/\\S*,\\S*\\s(\\S*)\\s(\\S*).*",
         "nameGroup": 1,
         "versionGroup": 2,
         "archGroup": 3
