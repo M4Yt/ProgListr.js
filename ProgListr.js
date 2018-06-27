@@ -49,49 +49,6 @@ function getWinProgs() {
 }
 
 function getLnxProgs() {
-    const detectPackageManagerCommand = `
-        apt --version &>/dev/null
-        if [ $? -eq 0 ]
-        then
-            echo "apt"
-            exit
-        fi
-        dnf --version &>/dev/null
-        if [ $? -eq 0 ]
-        then
-            echo "dnf"
-            exit
-        fi
-        yum --version &>/dev/null
-        if [ $? -eq 0 ]
-        then
-            echo "yum"
-            exit
-        fi
-    `;
-    const pkgManagers = {
-        "apt": {
-            "command": "apt list --installed",
-            "regex": "/(\\S*)\\/\\S*,\\S*\\s(\\S*)\\s(\\S*).*/",
-            "nameGroup": 1,
-            "versionGroup": 2,
-            "archGroup": 3
-        },
-        "dnf": {
-            "command": "dnf list installed",
-            "regex": "(\\S*)\\.(\\S*)\\s*(\\S*)\\.\\S*\\s*\\S*",
-            "nameGroup": 1,
-            "versionGroup": 3,
-            "archGroup": 2
-        },
-        "yum": {
-            "command": "yum list installed",
-            "regex": "(\\S*)\\.(\\S*)\\s*(\\S*)\\.\\S*\\s*\\S*",
-            "nameGroup": 1,
-            "versionGroup": 3,
-            "archGroup": 2
-        }
-    };
     return new Promise((resolve, reject) => {
         exec(detectPackageManagerCommand, (error, pkgManager) => {
             if (error !== null) {
@@ -135,3 +92,49 @@ function getMacProgs() {
         reject("Mac platform not yet supported");
     });
 }
+
+// Constants used by getLnxProgs
+const detectPackageManagerCommand = `
+    apt --version &>/dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "apt"
+        exit
+    fi
+    dnf --version &>/dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "dnf"
+        exit
+    fi
+    yum --version &>/dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "yum"
+        exit
+    fi
+`;
+
+const pkgManagers = {
+    "apt": {
+        "command": "apt list --installed",
+        "regex": "/(\\S*)\\/\\S*,\\S*\\s(\\S*)\\s(\\S*).*/",
+        "nameGroup": 1,
+        "versionGroup": 2,
+        "archGroup": 3
+    },
+    "dnf": {
+        "command": "dnf list installed",
+        "regex": "(\\S*)\\.(\\S*)\\s*(\\S*)\\.\\S*\\s*\\S*",
+        "nameGroup": 1,
+        "versionGroup": 3,
+        "archGroup": 2
+    },
+    "yum": {
+        "command": "yum list installed",
+        "regex": "(\\S*)\\.(\\S*)\\s*(\\S*)\\.\\S*\\s*\\S*",
+        "nameGroup": 1,
+        "versionGroup": 3,
+        "archGroup": 2
+    }
+};
