@@ -89,7 +89,29 @@ function getLnxProgs() {
 
 function getMacProgs() {
     return new Promise((resolve, reject) => {
-        reject("Mac platform not yet supported");
+        exec(`for i in ls /Applications/*; do echo "$i" && mdls -name kMDItemVersion "$i" | sed 's/kMDItemVersion =/Version/g'; done`, (error, stdout) => {
+            const pattern = /(.*)\nVersion (.*)/mg
+            const allPrograms = [];
+            let match = pattern.exec(stdout);
+            while (match) {
+                let name = match[1];
+                if (name.endsWith(".app")) {
+                    name = name.substring(0, name.length-4);
+                }
+                name = name.replace("/Applications/", "");
+                const version = match[2].replace(/"/g, "");
+                allPrograms.push({
+                    name: name,
+                    version: version
+                });
+                match = pattern.exec(stdout);
+            }
+            if (allPrograms.length) {
+                resolve(allPrograms);
+            } else {
+                reject("No programs found");
+            }
+        });
     });
 }
 
