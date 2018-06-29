@@ -97,15 +97,15 @@ function getMacProgs() {
                 const allPrograms = [];
                 let match = pattern.exec(stdout);
                 while (match) {
-                    let name = match[1];
-                    if (name.endsWith(".app")) {
-                        name = name.substring(0, name.length-4);
+                    let pName = match[1];
+                    if (pName.endsWith(".app")) {
+                        pName = pName.substring(0, pName.length-4);
                     }
-                    name = name.replace("/Applications/", "");
-                    const version = match[2].replace(/"/g, "");
+                    pName = pName.replace("/Applications/", "");
+                    const pVersion = match[2].replace(/"/g, "");
                     allPrograms.push({
-                        name: name,
-                        version: version
+                        name: pName,
+                        version: pVersion
                     });
                     match = pattern.exec(stdout);
                 }
