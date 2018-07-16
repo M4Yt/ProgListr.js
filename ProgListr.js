@@ -7,9 +7,9 @@ exports.getProgs = getProgs;
 function getProgs() {
     if (/^win/.test(process.platform)) {
         return getWinProgs();
-    } else if (/^linux|^android/.test(process.platform) {
+    } else if (/^linux|^android/.test(process.platform)) {
         return getLnxProgs();
-    } else if (/^darwin/.test(process.platform)){
+    } else if (/^darwin/.test(process.platform)) {
         return getMacProgs();
     } else {
         return new Promise((resolve, reject) => {
