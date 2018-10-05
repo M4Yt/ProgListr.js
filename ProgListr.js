@@ -63,23 +63,22 @@ function getLnxProgs() {
                     reject("This package manager is not yet supported");
                 }
                 const managerInfo = pkgManagers[pkgManager];
-                exec(managerInfo.command, (error, stdout) => {
+                exec(managerInfo.command, {maxBuffer: 1024 * 1024}, (error, stdout) => {
                     const allPrograms = [];
-                    stdout.split("\n").forEach(line => {
-                        const regex = RegExp(managerInfo.regex);
-                        const groups = regex.exec(line);
-                        if (groups) {
-                            const pName = groups[managerInfo.nameGroup];
-                            const pVersion = groups[managerInfo.versionGroup];
-                            const pArch = groups[managerInfo.archGroup];
-                            const program = {
-                                name: pName,
-                                version: pVersion,
-                                arch: pArch
-                            };
-                            allPrograms.push(program);
-                        }
-                    });
+                    const regex = RegExp(managerInfo.regex, "gm");
+                    let match = regex.exec(stdout);
+                    while (match) {
+                        const pName = match[managerInfo.nameGroup];
+                        const pVersion = match[managerInfo.versionGroup];
+                        const pArch = match[managerInfo.archGroup];
+                        const program = {
+                            name: pName,
+                            version: pVersion,
+                            arch: pArch
+                        };
+                        allPrograms.push(program);
+                        match = regex.exec(stdout);
+                    }
                     if (allPrograms.length) {
                         resolve(allPrograms);
                     } else {
