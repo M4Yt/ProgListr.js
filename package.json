@@ -1,6 +1,6 @@
 {
   "name": "proglistr",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "List all currently installed programs",
   "main": "ProgListr.js",
   "scripts": {
@@ -12,8 +12,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/fabiaant/ProgListr.js.git"
+    "url": "https://github.com/M4Yt/ProgListr.js.git"
   },
-  "author": "Fabian Thiellier",
+  "author": "May Thiellier",
   "license": "MIT"
 }
