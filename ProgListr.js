@@ -124,19 +124,19 @@ function getMacProgs() {
 
 // Constants used by getLnxProgs
 const detectPackageManagerCommand = `
-    apt --version >/dev/null 2>&1
+    apt-get --version >/dev/null 2>&1
     if [ $? -eq 0 ]
     then
         echo "apt"
         exit
     fi
-    dnf --version &>/dev/null
+    dnf --version >/dev/null 2>&1
     if [ $? -eq 0 ]
     then
         echo "dnf"
         exit
     fi
-    yum --version &>/dev/null
+    yum --version >/dev/null 2>&1
     if [ $? -eq 0 ]
     then
         echo "yum"
