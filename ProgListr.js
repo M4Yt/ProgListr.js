@@ -20,7 +20,7 @@ function getProgs() {
 
 function getWinProgs() {
     return new Promise((resolve, reject) => {
-        exec("wmic product get name,version", (error, stdout) => {
+        exec("%SystemRoot%\\System32\\Wbem\\wmic.exe product get name,version", (error, stdout) => {
             if (error !== null) {
                 reject(error);
             } else {
